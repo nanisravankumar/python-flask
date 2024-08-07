@@ -34,9 +34,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run app.py
-        run: python app.py
-
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
 
@@ -74,6 +71,9 @@ jobs:
           scm-do-build-during-deployment: true
           enable-oryx-build: true
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_895c7f8ed7044117a1a0f2a1b72c9718 }}
+
+      - name: Run app.py
+        run: python app.py
 
 
 
