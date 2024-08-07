@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python project to Azure Function App - testfunappnokia
+name: Build and deploy Python project to Azure Function App - testfunappgpt
 
 on:
   push:
@@ -34,7 +34,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Optional: Add step to run tests here
+      - name: Run app.py
+        run: python app.py
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -51,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'production'
       url: ${{ steps.deploy-to-function.outputs.webapp-url }}
     
     steps:
@@ -67,9 +68,87 @@ jobs:
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: 'testfunappnokia'
-          slot-name: 'Production'
+          app-name: 'testfunappgpt'
+          slot-name: 'production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E10D5D5F186F484284B904F3AFB6D7D5 }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_895c7f8ed7044117a1a0f2a1b72c9718 }}
+
+
+
+# # Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
+# # More GitHub Actions for Azure: https://github.com/Azure/actions
+# # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
+
+# name: Build and deploy Python project to Azure Function App - testfunappnokia
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch:
+
+# env:
+#   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+#   PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Setup Python version
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: ${{ env.PYTHON_VERSION }}
+
+#       - name: Create and start virtual environment
+#         run: |
+#           python -m venv venv
+#           source venv/bin/activate
+
+#       - name: Install dependencies
+#         run: pip install -r requirements.txt
+
+#       # Optional: Add step to run tests here
+
+#       - name: Zip artifact for deployment
+#         run: zip release.zip ./* -r
+
+#       - name: Upload artifact for deployment job
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: python-app
+#           path: |
+#             release.zip
+#             !venv/
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: build
+#     environment:
+#       name: 'Production'
+#       url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+    
+#     steps:
+#       - name: Download artifact from build job
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: python-app
+
+#       - name: Unzip artifact for deployment
+#         run: unzip release.zip     
+        
+#       - name: 'Deploy to Azure Functions'
+#         uses: Azure/functions-action@v1
+#         id: deploy-to-function
+#         with:
+#           app-name: 'testfunappnokia'
+#           slot-name: 'Production'
+#           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+#           scm-do-build-during-deployment: true
+#           enable-oryx-build: true
+#           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E10D5D5F186F484284B904F3AFB6D7D5 }}
